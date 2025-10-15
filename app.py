@@ -25,4 +25,6 @@ def predict():
         return render_template("index.html", prediction_text = result)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # When deploying with gunicorn or Docker, gunicorn will run the app.
+    # Keep this here for local development but disable debug for production.
+    app.run(host="0.0.0.0", debug=False)
