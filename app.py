@@ -18,7 +18,23 @@ def predict():
         clf = DecisionTree()
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         clf.fit(X_train, y_train)
-        float_features = [float(x) for x in request.form.values()]
+        # Read form values by field name to ensure correct ordering and parsing
+        expected_fields = [
+            "Age",
+            "Sex",
+            "ChestPainType",
+            "RestingBloodPressure",
+            "SerumCholestrol",
+            "FastingBloodSugar",
+            "RestingECGResult",
+            "MaxHeartRateAchieved",
+            "ExerciseInducedAngina",
+            "Oldpeak",
+            "Slope",
+            "MajorVessels",
+            "Thal",
+        ]
+        float_features = [float(request.form.get(f)) for f in expected_fields]
         features = [np.array(float_features)]
         prediction = clf.predict(features)
         result = "Negative" if prediction == 0 else "Positive"
