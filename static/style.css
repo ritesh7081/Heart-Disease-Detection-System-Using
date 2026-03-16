@@ -173,6 +173,7 @@ select::-ms-expand { display: none }
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.75rem;
 }
 
 .submit-btn > button {

@@ -1,110 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Heart Disease Prediction</title>
-    <link rel="stylesheet" href="../static/style.css" />
-  </head>
-  <body>
-    <div class="login">
-      <div class="card">
-        <header class="card-header">
-          <h1>Heart Disease Classifier</h1>
-          <p class="subtitle">Enter the required values to predict risk</p>
-        </header>
 
-        <div class="result">
-          Result: <span id="prediction-text">{{prediction_text}}</span>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart Disease Prediction</title>
+
+  <link rel="stylesheet" href="../static/style.css">
+
+</head>
+
+<body>
+
+  <div class="login">
+
+    <div class="card">
+
+      <header class="card-header">
+
+        <h1>Heart Disease Classifier</h1>
+
+        <p class="subtitle">
+          Enter the required values to predict risk
+        </p>
+
+        <!-- <p class="accuracy">
+          Model Accuracy: <span>{{accuracy}}%</span>
+        </p> -->
+
+      </header>
+
+      <div class="result">
+
+        <strong>Prediction Result:</strong>
+
+        <span id="prediction-text">
+          {{prediction_text}}
+        </span>
+
+        {% if risk %}
+        <p class="risk">
+          Heart Disease Risk: <span>{{risk}}%</span>
+        </p>
+        {% endif %}
+
+      </div>
+
+      <form id="predict-form" action="predict" method="POST">
+
+        <div class="form-grid">
+
+          <div class="heart-img">
+            <img id="heart-img" src="../static/images/heart_img.png" alt="Heart">
+          </div>
+
+
+          <div class="input-container">
+            <label>Age</label>
+            <input name="Age" type="number" min="1" max="120" placeholder="Enter age" required>
+          </div>
+
+
+          <div class="input-container">
+            <label>Sex</label>
+            <select name="Sex" id="sex" required>
+              <option value="">Select Sex</option>
+              <option value="0">0 - Female</option>
+              <option value="1">1 - Male</option>
+            </select>
+          </div>
+
+
+          <div class="input-container">
+            <label>Chest Pain Type</label>
+            <select name="ChestPainType" required>
+              <option value="">Select</option>
+              <option value="0">0 - Typical Angina</option>
+              <option value="1">1 - Atypical Angina</option>
+              <option value="2">2 - Non-anginal Pain</option>
+              <option value="3">3 - Asymptomatic</option>
+            </select>
+          </div>
+
+
+          <div class="input-container">
+            <label>Resting Blood Pressure</label>
+            <input name="RestingBloodPressure" type="number" min="80" max="200" placeholder="mmHg" required>
+          </div>
+
+
+          <div class="input-container">
+            <label>Serum Cholesterol</label>
+            <input name="SerumCholestrol" type="number" min="100" max="600" placeholder="mg/dl" required>
+          </div>
+
+
+          <div class="input-container">
+            <label>Fasting Blood Sugar</label>
+            <select name="FastingBloodSugar" required>
+              <option value="">Select</option>
+              <option value="0">0 - ≤ 120 mg/dl</option>
+              <option value="1">1 - > 120 mg/dl</option>
+            </select>
+          </div>
+
+
+          <div class="input-container">
+            <label>Resting ECG Result</label>
+            <select name="RestingECGResult" required>
+              <option value="">Select</option>
+              <option value="0">0 - Normal</option>
+              <option value="1">1 - ST-T abnormality</option>
+              <option value="2">2 - Left ventricular hypertrophy</option>
+            </select>
+          </div>
+
+
+          <div class="input-container">
+            <label>Max Heart Rate</label>
+            <input name="MaxHeartRateAchieved" type="number" min="60" max="220" placeholder="BPM" required>
+          </div>
+
+
+          <div class="input-container">
+            <label>Exercise Induced Angina</label>
+            <select name="ExerciseInducedAngina" required>
+              <option value="">Select</option>
+              <option value="0">0 - No</option>
+              <option value="1">1 - Yes</option>
+            </select>
+          </div>
+
+
+          <div class="input-container">
+            <label>Oldpeak</label>
+            <input name="Oldpeak" type="number" step="0.1" min="0" max="6" placeholder="example 1.5" required>
+          </div>
+
+
+          <div class="input-container">
+            <label>Slope</label>
+            <select name="Slope" required>
+              <option value="">Select</option>
+              <option value="0">0 - Upsloping</option>
+              <option value="1">1 - Flat</option>
+              <option value="2">2 - Downsloping</option>
+            </select>
+          </div>
+
+
+          <div class="input-container">
+            <label>Major Vessels</label>
+            <select name="MajorVessels" required>
+              <option value="">Select</option>
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+
+
+          <div class="input-container">
+            <label>Thalassemia</label>
+            <select name="Thal" required>
+              <option value="">Select</option>
+              <option value="1">1 - Normal</option>
+              <option value="2">2 - Fixed Defect</option>
+              <option value="3">3 - Reversible Defect</option>
+            </select>
+          </div>
+
         </div>
 
-        <form id="predict-form" action="predict" method="POST" novalidate>
-          <div class="form-grid">
-            <div class="heart-img">
-              <img src="../static/images/heart_img.png" alt="Heart" />
-            </div>
+        <div class="submit-btn">
+          <button type="submit" class="btn">Predict</button>
+          <button type="reset" class="btn reset">Clear</button>
+        </div>
 
-            <div class="input-container">
-              <label for="age">Age</label>
-              <input id="age" name="Age" type="number" step="any" placeholder="Age" required />
-            </div>
+      </form>
 
-            <div class="input-container">
-              <label for="sex">Sex</label>
-              <div class="select-with-text">
-                <select id="sex" name="Sex" required>
-                  <option value="">Select Sex</option>
-                  <option value="1">Male</option>
-                  <option value="0">Female</option>
-                </select>
-                <!-- <input id="sex-text" type="text" readonly placeholder="Sex" /> -->
-              </div>
-            </div>
-
-            <div class="input-container">
-              <label for="CPT">Chest Pain Type</label>
-              <input id="CPT" name="ChestPainType" type="number" step="any" placeholder="Chest Pain Type" required />
-            </div>
-
-            <div class="input-container">
-              <label for="RBP">Resting Blood Pressure</label>
-              <input id="RBP" name="RestingBloodPressure" type="number" step="any" placeholder="Resting Blood Pressure" required />
-            </div>
-
-            <div class="input-container">
-              <label for="SerumC">Serum Cholestrol</label>
-              <input id="SerumC" name="SerumCholestrol" type="number" step="any" placeholder="Serum Cholestrol (mg/dl)" required />
-            </div>
-
-            <div class="input-container">
-              <label for="FBS">Fasting Blood Sugar</label>
-              <input id="FBS" name="FastingBloodSugar" type="number" step="any" placeholder="Fasting Blood Sugar > 10 mg/dl" required />
-            </div>
-
-            <div class="input-container">
-              <label for="RECGR">Resting ECG Result</label>
-              <input id="RECGR" name="RestingECGResult" type="number" step="any" placeholder="Resting ECG Result (0, 1, 2)" required />
-            </div>
-
-            <div class="input-container">
-              <label for="MHRA">Max Heart Rate Achieved</label>
-              <input id="MHRA" name="MaxHeartRateAchieved" type="number" step="any" placeholder="Max Heart Rate Achieved" required />
-            </div>
-
-            <div class="input-container">
-              <label for="EIA">Exercise Induced Angina</label>
-              <input id="EIA" name="ExerciseInducedAngina" type="number" step="any" placeholder="Exercise Induced Angina" required />
-            </div>
-
-            <div class="input-container">
-              <label for="oldpeak">Oldpeak</label>
-              <input id="oldpeak" name="Oldpeak" type="number" step="any" placeholder="Oldpeak = ST depression induced by exercise relative to rest" required />
-            </div>
-
-            <div class="input-container">
-              <label for="slope">Slope of Peak Exercise</label>
-              <input id="slope" name="Slope" type="number" step="any" placeholder="The slope of the peak exercise ST segment" required />
-            </div>
-
-            <div class="input-container">
-              <label for="MV">Number of Major Vessels</label>
-              <input id="MV" name="MajorVessels" type="number" step="any" placeholder="Number of major vessels (0–3) colored by flourosopy" required />
-            </div>
-
-            <div class="input-container">
-              <label for="thal">Thal</label>
-              <input id="thal" name="Thal" type="number" step="any" placeholder="Thal: 0 = normal; 1 = fixed defect; 2 = reversible defect" required />
-            </div>
-          </div>
-
-          <div class="submit-btn">
-            <button type="submit" class="btn">Predict</button>
-          </div>
-        </form>
-      </div>
     </div>
 
-    <script src="../static/index.js"></script>
-  </body>
+  </div>
+
+  <script src="../static/index.js"></script>
+
+</body>
+
 </html>
